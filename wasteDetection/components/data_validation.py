@@ -3,7 +3,7 @@ import shutil
 from wasteDetection.logger import logging
 from wasteDetection.exception import AppException
 from wasteDetection.entity.config_entity import DataValidationConfig
-from wasteDetection.entity.artifacts_entity import (DataIngestionArtifact, DataValidationArtifact)
+from wasteDetection.entity.artifacts_entity import (DataIngestionArtifact, DataValidationArtifact , ModelTrainerArtifact)
  
 
 class DataValidation:
@@ -28,12 +28,12 @@ class DataValidation:
             for file in all_files:
                 if file not in self.data_validation_config.required_file_list:
                     validation_status = False
-                    os.makedirs(self.data_validation_config.data_validation_dir,exist_ok=False)
+                    os.makedirs(self.data_validation_config.data_validation_dir,exist_ok=True)
                     with open(self.data_validation_config.valid_status_file_dir, 'w') as f:
                         f.write(f'validation status :{validation_status}')
                 else :
                     validation_status = True
-                    os.makedirs(self.data_validation_config.data_validation_dir,exist_ok=False)
+                    os.makedirs(self.data_validation_config.data_validation_dir,exist_ok=True   )
                     with open(self.data_validation_config.valid_status_file_dir, 'w') as f:
                         f.write(f'validation status :{validation_status}')
                 
@@ -43,14 +43,14 @@ class DataValidation:
             raise AppException(e, sys)
         
     def initiate_data_validation(self) -> DataValidationArtifact:
-        logging.info("Entered initiate_data_validation method od DataValidation class")
+        logging.info("Entered initiate_data_validation method of DataValidation class")
         try:
             status = self.validate_all_files_exist()
             data_validation_artifact = DataValidationArtifact(
                 validation_status=status
             )
 
-            logging.info('Existed initiate_data_validation method od DataValidation class')
+            logging.info('Existed initiate_data_validation method of DataValidation class')
             logging .info(f'Data validation artifact : {data_validation_artifact}')
 
             if status :
@@ -60,3 +60,4 @@ class DataValidation:
         
         except Exception as e:
             raise AppException(e,sys)
+
